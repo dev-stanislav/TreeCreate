@@ -1,11 +1,13 @@
 $ErrorActionPreference = "Stop"
 
 $ScriptDir = Split-Path -Parent $MyInvocation.MyCommand.Path
+$ProjectDir = Split-Path -Parent (Split-Path -Parent $ScriptDir)
+$SourceFile = Join-Path $ProjectDir "src\treecreate.py"
 $BinDir = Join-Path $env:USERPROFILE ".local\bin"
 $CmdPath = Join-Path $BinDir "treecreate.cmd"
 
 New-Item -ItemType Directory -Force -Path $BinDir | Out-Null
-Set-Content -Path $CmdPath -Value "@echo off`r`npython `"$ScriptDir\treecreate`" %*`r`n" -Encoding ASCII
+Set-Content -Path $CmdPath -Value "@echo off`r`npython `"$SourceFile`" %*`r`n" -Encoding ASCII
 
 $UserPath = [Environment]::GetEnvironmentVariable("Path", "User")
 $PathParts = @()

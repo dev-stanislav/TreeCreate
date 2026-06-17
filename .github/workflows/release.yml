@@ -21,21 +21,28 @@ jobs:
 
       - name: Test
         run: |
-          python3 -m py_compile treecreate
-          ./treecreate --all -o /tmp/treecreate-test.txt
+          python3 -m py_compile src/treecreate.py
+          python3 src/treecreate.py --all -o /tmp/treecreate-test.txt
 
       - name: Build Linux archive
         run: |
           mkdir -p "dist/treecreate-${VERSION}-linux"
-          cp README.md treecreate install.sh "dist/treecreate-${VERSION}-linux/"
-          chmod +x "dist/treecreate-${VERSION}-linux/treecreate" "dist/treecreate-${VERSION}-linux/install.sh"
+          cp README.md "dist/treecreate-${VERSION}-linux/"
+          mkdir -p "dist/treecreate-${VERSION}-linux/src" "dist/treecreate-${VERSION}-linux/install/linux"
+          cp src/treecreate.py "dist/treecreate-${VERSION}-linux/src/"
+          cp install/linux/install.sh "dist/treecreate-${VERSION}-linux/install/linux/"
+          chmod +x "dist/treecreate-${VERSION}-linux/src/treecreate.py" "dist/treecreate-${VERSION}-linux/install/linux/install.sh"
           tar -czf "dist/treecreate-${VERSION}-linux.tar.gz" -C dist "treecreate-${VERSION}-linux"
 
       - name: Build Windows archive
         run: |
           mkdir -p "dist/treecreate-${VERSION}-windows"
-          cp README.md treecreate treecreate.cmd install.ps1 "dist/treecreate-${VERSION}-windows/"
-          python3 -m zipfile -c "dist/treecreate-${VERSION}-windows.zip" "dist/treecreate-${VERSION}-windows"
+          cp README.md "dist/treecreate-${VERSION}-windows/"
+          mkdir -p "dist/treecreate-${VERSION}-windows/src" "dist/treecreate-${VERSION}-windows/install/windows"
+          cp src/treecreate.py "dist/treecreate-${VERSION}-windows/src/"
+          cp install/windows/install.ps1 install/windows/treecreate.cmd "dist/treecreate-${VERSION}-windows/install/windows/"
+          cd dist
+          python3 -m zipfile -c "treecreate-${VERSION}-windows.zip" "treecreate-${VERSION}-windows"
 
       - name: Publish GitHub release
         uses: softprops/action-gh-release@v2

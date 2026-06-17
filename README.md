@@ -20,6 +20,25 @@ my-project/
 - Default ignores for noisy folders like `.git`, `node_modules`, `venv`, `dist`, and caches
 - Custom output file, max depth, exclude patterns, and ASCII output
 
+## Project Layout
+
+```text
+TreeCreate/
+├── .github/
+│   └── workflows/
+│       └── release.yml
+├── install/
+│   ├── linux/
+│   │   └── install.sh
+│   └── windows/
+│       ├── install.ps1
+│       └── treecreate.cmd
+├── src/
+│   └── treecreate.py
+├── .gitignore
+└── README.md
+```
+
 ## Install
 
 Download the latest release from GitHub, unpack it, then run the installer for
@@ -28,8 +47,8 @@ your system.
 ### Linux or macOS
 
 ```bash
-chmod +x install.sh
-./install.sh
+chmod +x install/linux/install.sh
+./install/linux/install.sh
 ```
 
 If `treecreate` is not found after install, add `~/.local/bin` to your shell.
@@ -51,14 +70,14 @@ fish_add_path $HOME/.local/bin
 Run PowerShell inside the unpacked folder:
 
 ```powershell
-.\install.ps1
+.\install\windows\install.ps1
 ```
 
 If PowerShell blocks scripts:
 
 ```powershell
 Set-ExecutionPolicy -Scope CurrentUser RemoteSigned
-.\install.ps1
+.\install\windows\install.ps1
 ```
 
 Restart PowerShell if `treecreate` is not found right after installing.
@@ -120,14 +139,14 @@ treecreate-v1.0.0-windows.zip
 Check the script:
 
 ```bash
-python3 -m py_compile treecreate
-treecreate --all -o /tmp/treecreate-test.txt
+python3 -m py_compile src/treecreate.py
+python3 src/treecreate.py --all -o /tmp/treecreate-test.txt
 ```
 
 Reinstall the command after moving the project folder:
 
 ```bash
-./install.sh
+./install/linux/install.sh
 ```
 
 Check which executable your shell uses:
