@@ -1,0 +1,45 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: write
+
+jobs:
+  build-release:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set version
+        run: echo "VERSION=${GITHUB_REF_NAME}" >> "$GITHUB_ENV"
+
+      - name: Test
+        run: |
+          python3 -m py_compile treecreate
+          ./treecreate --all -o /tmp/treecreate-test.txt
+
+      - name: Build Linux archive
+        run: |
+          mkdir -p "dist/treecreate-${VERSION}-linux"
+          cp README.md treecreate install.sh "dist/treecreate-${VERSION}-linux/"
+          chmod +x "dist/treecreate-${VERSION}-linux/treecreate" "dist/treecreate-${VERSION}-linux/install.sh"
+          tar -czf "dist/treecreate-${VERSION}-linux.tar.gz" -C dist "treecreate-${VERSION}-linux"
+
+      - name: Build Windows archive
+        run: |
+          mkdir -p "dist/treecreate-${VERSION}-windows"
+          cp README.md treecreate treecreate.cmd install.ps1 "dist/treecreate-${VERSION}-windows/"
+          python3 -m zipfile -c "dist/treecreate-${VERSION}-windows.zip" "dist/treecreate-${VERSION}-windows"
+
+      - name: Publish GitHub release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            dist/treecreate-${{ env.VERSION }}-linux.tar.gz
+            dist/treecreate-${{ env.VERSION }}-windows.zip
