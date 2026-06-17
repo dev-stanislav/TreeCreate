@@ -1,25 +1,46 @@
-# treecreate
+# TreeCreate
 
-`treecreate` creates a clean `.txt` file with a project directory tree.
+Create a clean `.txt` tree of any project folder from the terminal.
+
+```text
+my-project/
+├── src/
+│   └── app.py
+├── README.md
+└── package.json
+
+1 directories, 3 files
+```
+
+## Features
+
+- Interactive mode for normal or full tree output
+- Linux, macOS, and Windows support through Python
+- Ready GitHub Release archives for Linux and Windows
+- Default ignores for noisy folders like `.git`, `node_modules`, `venv`, `dist`, and caches
+- Custom output file, max depth, exclude patterns, and ASCII output
 
 ## Install
 
-### Linux
+Download the latest release from GitHub, unpack it, then run the installer for
+your system.
+
+### Linux or macOS
 
 ```bash
 chmod +x install.sh
 ./install.sh
 ```
 
-If `~/.local/bin` is not in your shell path, add it for your shell.
+If `treecreate` is not found after install, add `~/.local/bin` to your shell.
 
-For bash or zsh, add this to `~/.bashrc` or `~/.zshrc`:
+For bash or zsh:
 
 ```bash
 export PATH="$HOME/.local/bin:$PATH"
 ```
 
-For fish, run:
+For fish:
 
 ```fish
 fish_add_path $HOME/.local/bin
@@ -27,91 +48,20 @@ fish_add_path $HOME/.local/bin
 
 ### Windows
 
-Run this in PowerShell from the project folder:
+Run PowerShell inside the unpacked folder:
 
 ```powershell
 .\install.ps1
 ```
 
-If PowerShell blocks scripts, run:
+If PowerShell blocks scripts:
 
 ```powershell
 Set-ExecutionPolicy -Scope CurrentUser RemoteSigned
 .\install.ps1
 ```
 
-After installing, restart PowerShell if `treecreate` is not found.
-
-## Update
-
-If you installed with `./install.sh`, the command in `~/.local/bin/treecreate`
-points to this project file. That means changes in `treecreate` are available
-right away.
-
-After editing the script, you can check it with:
-
-```bash
-python3 -m py_compile treecreate
-treecreate --all -o /tmp/treecreate-test.txt
-```
-
-If you moved this project folder or want to reinstall the command, run:
-
-```bash
-./install.sh
-```
-
-Check which command your shell uses:
-
-```bash
-which treecreate
-```
-
-Remove the installed command:
-
-```bash
-rm ~/.local/bin/treecreate
-```
-
-On Windows, remove:
-
-```powershell
-Remove-Item "$env:USERPROFILE\.local\bin\treecreate.cmd"
-```
-
-## GitHub Release
-
-This project includes a GitHub Actions workflow that creates ready archives for
-Linux and Windows when you push a version tag.
-
-Create and push a release tag:
-
-```bash
-git add .
-git commit -m "Prepare release build"
-git tag v1.0.0
-git push origin main
-git push origin v1.0.0
-```
-
-GitHub will create a release with:
-
-```text
-treecreate-v1.0.0-linux.tar.gz
-treecreate-v1.0.0-windows.zip
-```
-
-Linux users download the `.tar.gz`, unpack it, then run:
-
-```bash
-./install.sh
-```
-
-Windows users download the `.zip`, unpack it, then run in PowerShell:
-
-```powershell
-.\install.ps1
-```
+Restart PowerShell if `treecreate` is not found right after installing.
 
 ## Usage
 
@@ -121,48 +71,79 @@ Create `project-tree.txt` for the current folder:
 treecreate
 ```
 
-When run without options in a terminal, `treecreate` asks which mode to use:
+When run without options in a terminal, TreeCreate asks what to include:
 
 ```text
-1) normal - skip hidden files and folders
-2) all    - include hidden files and folders
+Choose tree mode:
+  1) normal - skip hidden files and folders
+  2) all    - include hidden files and folders
 ```
 
-Run the menu explicitly:
+Common commands:
+
+| Command | What it does |
+| --- | --- |
+| `treecreate` | Open the interactive mode |
+| `treecreate --all` | Include hidden files and folders |
+| `treecreate --interactive` | Force the mode picker |
+| `treecreate /path/to/project` | Create a tree for another folder |
+| `treecreate -o tree.txt` | Save to `tree.txt` |
+| `treecreate -d 3` | Limit output depth |
+| `treecreate -x "*.png" -x "tmp"` | Exclude custom patterns |
+| `treecreate --ascii` | Use ASCII tree symbols |
+
+## Release
+
+This repository includes a GitHub Actions workflow that builds release archives
+when a version tag is pushed.
+
+Create a new release:
 
 ```bash
-treecreate --interactive
+git add .
+git commit -m "Prepare release build"
+git push origin main
+
+git tag v1.0.0
+git push origin v1.0.0
 ```
 
-Run all mode directly:
+The release will include:
+
+```text
+treecreate-v1.0.0-linux.tar.gz
+treecreate-v1.0.0-windows.zip
+```
+
+## Development
+
+Check the script:
 
 ```bash
-treecreate --all
+python3 -m py_compile treecreate
+treecreate --all -o /tmp/treecreate-test.txt
 ```
 
-Create a tree for another project:
+Reinstall the command after moving the project folder:
 
 ```bash
-treecreate /path/to/project -o tree.txt
+./install.sh
 ```
 
-Limit depth:
+Check which executable your shell uses:
 
 ```bash
-treecreate -d 3
+which treecreate
 ```
 
-Exclude extra files:
+Remove the installed Linux/macOS command:
 
 ```bash
-treecreate -x "*.png" -x "tmp"
+rm ~/.local/bin/treecreate
 ```
 
-Use ASCII output:
+Remove the installed Windows command:
 
-```bash
-treecreate --ascii
+```powershell
+Remove-Item "$env:USERPROFILE\.local\bin\treecreate.cmd"
 ```
-
-By default, common heavy or noisy folders are skipped, including `.git`, `node_modules`,
-`venv`, `dist`, `build`, caches, and log files.
